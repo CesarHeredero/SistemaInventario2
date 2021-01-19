@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace SistemaInventario.Data
+namespace SistemaInventario.AccesoDatos.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
