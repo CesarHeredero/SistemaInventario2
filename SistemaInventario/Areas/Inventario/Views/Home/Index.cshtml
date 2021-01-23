@@ -1,8 +1,22 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<SistemaInventario.Modelos.Producto>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    @foreach(var producto in Model)
+    {
+        <div class="col-lg-3 col-md-6">
+            <div class="row p-2">
+                <div class="col-12 p-1" style="border: 1px solid #ccc; border-radius:5px">
+                    <div class="card" style="border:0;">
+                        <img src="@producto.ImagenUrl" class="card-img-top" />
+                        <div class="pl-1">
+                            <p class="card-title h5">@producto.Descripcion</p>
+                        </div>
+                        <div>
+                            <p>Precio: <b>@producto.Precio.ToString("0.00") €</b></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>

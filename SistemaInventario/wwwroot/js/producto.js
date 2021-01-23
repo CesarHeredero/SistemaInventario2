@@ -10,10 +10,10 @@ function loadDataTable() {
             "url": "/Admin/Producto/ObtenerTodos"
         },
         "columns": [
-            { "data": "numeroserie", "width": "15%" },
+            { "data": "numeroSerie", "width": "15%" },
             { "data": "descripcion", "width": "15%" },
-            { "data": "categoria.Nombre", "width": "15%" },
-            { "data": "marca.Nombre", "width": "15%" },
+            { "data": "categoria.nombre", "width": "15%" },
+            { "data": "marca.nombre", "width": "15%" },
             { "data": "precio", "width": "15%" },
            
             {

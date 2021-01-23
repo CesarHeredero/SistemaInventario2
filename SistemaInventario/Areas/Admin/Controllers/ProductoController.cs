@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +42,11 @@ namespace SistemaInventario.Areas.Admin.Controllers
                 {
                     Text = m.Nombre,
                     Value = m.Id.ToString(),
+                }),
+                PadreLista = _unidadTrabajo.Producto.ObtenerTodos().Select(p => new SelectListItem
+                {
+                    Text = p.Descripcion,
+                    Value = p.Id.ToString()
                 })
             };
 
@@ -62,22 +68,80 @@ namespace SistemaInventario.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Producto producto)
+        public IActionResult Upsert(ProductoVM productoVM)
         {
             if (ModelState.IsValid)
             {
-                if (producto.Id == 0)
+                //Cargar imágenes
+                string webRootPath = _hostEnvirnment.WebRootPath;
+                var files = HttpContext.Request.Form.Files;
+                if(files.Count > 0)
                 {
-                    _unidadTrabajo.Producto.Ageregar(producto);
+                    string filename = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(webRootPath, @"imagenes\productos");
+                    var extension = Path.GetExtension(files[0].FileName);
+
+                    if(productoVM.Producto.ImagenUrl != null)
+                    {
+                        var imagenPath = Path.Combine(webRootPath, productoVM.Producto.ImagenUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(imagenPath))
+                        {
+                            System.IO.File.Delete(imagenPath);
+                        }
+                    }
+
+                    using(var filesStreams = new FileStream(Path.Combine(uploads, filename + extension), FileMode.Create))
+                    {
+                        files[0].CopyTo(filesStreams);
+                    }
+                    productoVM.Producto.ImagenUrl = @"\imagenes\productos\" + filename + extension;
                 }
                 else
                 {
-                    _unidadTrabajo.Producto.Actualizar(producto);
+                    if(productoVM.Producto.Id != 0)
+                    {
+                        Producto productoDb = _unidadTrabajo.Producto.Obtener(productoVM.Producto.Id);
+                        productoVM.Producto.ImagenUrl = productoDb.ImagenUrl;
+                    }
+                }
+
+                if (productoVM.Producto.Id == 0)
+                {
+                    _unidadTrabajo.Producto.Ageregar(productoVM.Producto);
+                }
+                else
+                {
+                    _unidadTrabajo.Producto.Actualizar(productoVM.Producto);
                 }
                 _unidadTrabajo.Guardar();
                 return RedirectToAction(nameof(Index));
             }
-            return View(producto);
+            else
+            {
+                productoVM.CategoriaLista = _unidadTrabajo.Categoria.ObtenerTodos().Select(c => new SelectListItem
+                {
+                    Text = c.Nombre,
+                    Value = c.Id.ToString()
+                });
+
+                productoVM.MarcaLista = _unidadTrabajo.Marca.ObtenerTodos().Select(m => new SelectListItem
+                {
+                    Text = m.Nombre,
+                    Value = m.Id.ToString(),
+                });
+
+                productoVM.PadreLista = _unidadTrabajo.Producto.ObtenerTodos().Select(p => new SelectListItem
+                {
+                    Text = p.Descripcion,
+                    Value = p.Id.ToString()
+                });
+
+                if (productoVM.Producto.Id != null)
+                {
+                    productoVM.Producto = _unidadTrabajo.Producto.Obtener(productoVM.Producto.Id);
+                }
+            }
+            return View(productoVM);
         }
 
 
@@ -106,6 +170,13 @@ namespace SistemaInventario.Areas.Admin.Controllers
             if(productoDb == null)
             {
                 return Json(new { success = false, message = "Error al borrar" });
+            }
+
+            string webRootPath = _hostEnvirnment.WebRootPath;
+            var imagenPath = Path.Combine(webRootPath, productoDb.ImagenUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(imagenPath))
+            {
+                System.IO.File.Delete(imagenPath);
             }
             _unidadTrabajo.Producto.Remover(productoDb);
             _unidadTrabajo.Guardar();
