@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using SistemaInventario.Utilidades
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,25 +29,37 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Contenido
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Bodega" asp-action="Index">Bodega</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Categoria" asp-action="Index">Categorias</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Marca" asp-action="Index">Marca</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Producto" asp-action="Index">Productos</a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Usuario
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Usuario" asp-action="Index">Usuarios</a>
-                            </div>
-                        </li>
+                        @if (User.IsInRole(DS.Role_Admin) || User.IsInRole(DS.Role_Inventario))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Contenido
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    @if (User.IsInRole(DS.Role_Admin))
+                                    {
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Bodega" asp-action="Index">Bodega</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Categoria" asp-action="Index">Categorias</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Marca" asp-action="Index">Marca</a>
+                                    }
+                                    @if (User.IsInRole(DS.Role_Admin) || User.IsInRole(DS.Role_Inventario))
+                                    {
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Producto" asp-action="Index">Productos</a>
+                                    }
+                                </div>
+                            </li>
+                        }
+                        @if (User.IsInRole(DS.Role_Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Usuario
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Usuario" asp-action="Index">Usuarios</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
