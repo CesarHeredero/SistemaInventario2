@@ -59,13 +59,12 @@
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            @if (User.IsInRole(DS.Role_Admin))
-            {
+           
                 <div class="form-group">
                     <label asp-for="Input.Rol"></label>
                     @Html.DropDownListFor(r => r.Input.Rol, Model.Input.ListaRol, "Seleccione Rol", new { @class= "form-control"})
                 </div>
-            }
+           
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>
