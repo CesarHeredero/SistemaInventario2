@@ -60,6 +60,17 @@
                                 </div>
                             </li>
                         }
+                        @if (User.IsInRole(DS.Role_Admin) || User.IsInRole(DS.Role_Inventario))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Inventario
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-area="Inventario" asp-controller="Inventario" asp-action="Index">Stock productos</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
