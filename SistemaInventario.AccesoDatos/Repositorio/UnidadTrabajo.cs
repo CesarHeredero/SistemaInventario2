@@ -20,12 +20,12 @@ namespace SistemaInventario.AccesoDatos.Repositorio
         public UnidadTrabajo(ApplicationDbContext db)
         {
             _db = db;
-            Bodega = new BodegaRepositorio(_db);
-            Categoria = new CategoriaRepositorio(_db);
-            Marca = new MarcaRepositorio(_db);
-            Producto = new ProductoRepositorio(_db);
-            UsuarioAplicacion = new UsuarioAplicacionRepositorio(_db);
-            Compania = new CompaniaRepositorio(_db);
+            Bodega              = new BodegaRepositorio(_db);
+            Categoria           = new CategoriaRepositorio(_db);
+            Marca               = new MarcaRepositorio(_db);
+            Producto            = new ProductoRepositorio(_db);
+            UsuarioAplicacion   = new UsuarioAplicacionRepositorio(_db);
+            Compania            = new CompaniaRepositorio(_db);
         }
 
 
