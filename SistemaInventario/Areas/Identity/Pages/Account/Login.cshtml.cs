@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using SistemaInventario.AccesoDatos.Repositorio.IRepositorio;
+using Microsoft.AspNetCore.Http;
+using SistemaInventario.Utilidades;
 
 namespace SistemaInventario.Areas.Identity.Pages.Account
 {
@@ -20,14 +23,17 @@ namespace SistemaInventario.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IUnidadTrabajo _unidadTrabajo;
 
         public LoginModel(SignInManager<IdentityUser> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager,
+            IUnidadTrabajo unidadTrabajo)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _unidadTrabajo = unidadTrabajo;
         }
 
         [BindProperty]
@@ -81,6 +87,9 @@ namespace SistemaInventario.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var usuario = _unidadTrabajo.UsuarioAplicacion.ObtenerPrimero(u => u.UserName == Input.UserName);
+                    var numeroProductos = _unidadTrabajo.CarroCompras.ObtenerTodos(c => c.UsuarioAplicacionId == usuario.Id).Count();
+                    HttpContext.Session.SetInt32(DS.ssCarroCompras, numeroProductos);
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

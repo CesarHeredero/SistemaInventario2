@@ -1,4 +1,8 @@
 ﻿@using SistemaInventario.Utilidades
+@using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor HttpContextAccessor
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,6 +74,25 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" asp-area="Inventario" asp-controller="Inventario" asp-action="Index">Stock productos</a>
                                 </div>
+                            </li>
+                        }
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32(DS.ssCarroCompras) != null)
+                        {
+                            <li class="text-white">
+                                <a asp-area="Inventario" asp-controller="Carro" asp-action="Index" class="nav-link">
+                                    @{
+                                        var cantidadaProducto = HttpContextAccessor.HttpContext.Session.GetInt32(DS.ssCarroCompras);
+                                    }
+                                    <i class="fas fa-shopping-cart"></i> (@cantidadaProducto)
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-shopping-cart"></i> (0)
+                                </a>
                             </li>
                         }
                     </ul>
