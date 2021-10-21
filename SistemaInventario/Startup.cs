@@ -16,6 +16,7 @@ using SistemaInventario.AccesoDatos.Repositorio;
 using SistemaInventario.AccesoDatos.Repositorio.IRepositorio;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using SistemaInventario.Utilidades;
+using Stripe;
 
 namespace SistemaInventario
 {
@@ -37,6 +38,7 @@ namespace SistemaInventario
             services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
             services.AddScoped<IUnidadTrabajo, UnidadTrabajo>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
@@ -80,6 +82,8 @@ namespace SistemaInventario
             app.UseAuthentication();
             app.UseAuthorization();
 
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["Secretkey"];
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -87,6 +91,8 @@ namespace SistemaInventario
                     pattern: "{area=Inventario}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, "..\\Rotativa\\Windows\\");
         }
     }
 }

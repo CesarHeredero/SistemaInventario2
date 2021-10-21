@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var estado = Context.Request.Query["estado"];
+    var pendiente = "text-primary";
+    var aprobado = "text-primary";
+    var completado = "text-primary";
+    var rechazado = "text-primary";
+    var todas = "text-primary";
+
+    switch (estado)
+    {
+        case "pendiente":
+            pendiente = "active text-white";
+            break;
+        case "aprobado":
+            aprobado = "active text-white";
+            break;
+        case "completado":
+            completado = "active text-white";
+            break;
+        case "rechazado":
+            rechazado = "active text-white";
+            break;
+        default:
+            todas = "active text-white";
+            break;
+    }
+
+
+}
+
+<div class="border p-3">
+    <div class="d-lg-flex justify-content-between mb-3">
+        <div class="p-2">
+            <h2 class="text-primary">Lista de Ordenes</h2>
+        </div>
+    </div>
+    <div class="p-2">
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item @pendiente">
+                <a style="text-decoration:none" class="@pendiente" asp-controller="Orden" asp-action="Index" asp-route-estado="pendiente">Pendientes</a>
+            </li>
+            <li class="list-group-item @aprobado">
+                <a style="text-decoration:none" class="@aprobado" asp-controller="Orden" asp-action="Index" asp-route-estado="aprobado">Aprobados</a>
+            </li>
+            <li class="list-group-item @completado">
+                <a style="text-decoration:none" class="@completado" asp-controller="Orden" asp-action="Index" asp-route-estado="completado">Completados</a>
+            </li>
+            <li class="list-group-item @rechazado">
+                <a style="text-decoration:none" class="@rechazado" asp-controller="Orden" asp-action="Index" asp-route-estado="rechazado">Rechazado</a>
+            </li>
+            <li class="list-group-item @todas">
+                <a style="text-decoration:none" class="@todas" asp-controller="Orden" asp-action="Index" asp-route-estado="todas">Todas</a>
+            </li>
+        </ul>
+    </div>
+    <br />
+    <br />
+    <table id="tblOrden" class="table table-striped" style="width:100%">
+        <thead class="thead-dark">
+            <tr class="table-info">
+                <th>Id</th>
+                <th>Cliente</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Estado</th>
+                <th>Monto</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="~/js/orden.js"></script>
+}
